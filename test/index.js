@@ -1939,6 +1939,7 @@ describe('Events', () => {
     it('emits request event after wreck creates a request', async () => {
 
         const handler = (req, res) => {
+
             res.writeHead(200);
             res.end('ok');
         };
@@ -1946,6 +1947,7 @@ describe('Events', () => {
         const server = await internals.server(handler);
         const wreck = Wreck.defaults({ events: true });
         wreck.events.once('request', (req) => {
+
             expect(req).to.exist();
         });
 
