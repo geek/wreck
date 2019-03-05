@@ -343,7 +343,7 @@ and decorate `uri` and `options` before a request is created.
 
 #### `request`
 
-The request event is emitted just after *wreck* creates a request and before it makes a request.  The
+The request event is emitted just after *wreck* creates a request.  The
 handler should accept the following arguments `(req)` where:
 
   - `req` - the raw [`ClientRequest`](https://nodejs.org/api/http.html#http_class_http_clientrequest) object created from the `uri`.
