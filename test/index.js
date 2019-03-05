@@ -1911,6 +1911,32 @@ describe('Events', () => {
         expect(count).to.equal(2);
     });
 
+    it('preRequest emits request event before wreck sends a request', async () => {
+
+        const handler = (req, res) => {
+
+            expect(req.headers.foo).to.equal('bar');
+            res.writeHead(200);
+            res.end('ok');
+        };
+
+        const server = await internals.server(handler);
+        const wreck = Wreck.defaults({ events: true });
+        wreck.events.once('preRequest', (uri, options) => {
+
+            expect(uri.href).to.equal('http://user:pass@localhost:' + server.address().port + '/');
+            expect(options).to.exist();
+            expect(uri.auth).to.equal('user:pass');
+
+            uri.headers.foo = 'bar';
+        });
+
+        const { res, payload } = await wreck.put('http://user:pass@localhost:' + server.address().port);
+        expect(res.statusCode).to.equal(200);
+        expect(payload.toString()).to.equal('ok');
+        server.close();
+    });
+
     it('emits request event before wreck sends a request', async () => {
 
         const handler = (req, res) => {
